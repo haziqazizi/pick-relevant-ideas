@@ -1,0 +1,174 @@
+# Task anatomy → entry nodes (seeds).
+# Seeds are NOT the final selection. Graph expand + relevance gate decide the rest.
+# Seed at most 4 principles total across all live facets.
+
+schema_version: 1
+
+facets:
+  auth:
+    - trust-boundaries
+    - least-privilege-access
+    - structural-safety-boundaries
+
+  time-waits:
+    - deadline-every-wait
+    - time-is-an-input
+    - compose-control-loops
+
+  shared-state:
+    - atomic-or-serialized-shared-state
+    - make-operations-idempotent
+    - one-source-of-truth
+    - consistency-vs-availability
+
+  external-input:
+    - trust-boundaries
+    - boundary-discipline
+    - data-shape-discipline
+    - bound-caller-created-work
+
+  schema-lifecycle:
+    - data-shape-discipline
+    - make-illegal-states-unrepresentable
+    - version-the-boundary
+    - one-source-of-truth
+
+  ui:
+    - user-visible-proof
+    - keep-responsive-path-free
+    - visible-failure-modes
+    - pit-of-success
+
+  cli-script:
+    - agent-friendly-cli
+    - non-interactive-first
+    - predictable-command-shape
+    - actionable-errors
+
+  migration-deploy:
+    - separate-decision-from-effect
+    - atomic-steps
+    - optimize-for-reversibility
+    - incremental-over-revolutionary
+
+  performance:
+    - measure-before-optimizing
+    - bound-caller-created-work
+    - keep-responsive-path-free
+    - compose-control-loops
+
+  ops-diagnosis:
+    - make-it-observable
+    - visible-failure-modes
+    - draw-the-whole-graph
+    - systems-over-heroes
+
+  open-design:
+    - exhaust-design-space
+    - redesign-from-first-principles
+    - managing-up
+
+  refactor:
+    - subtract-before-adding
+    - simplicity-budget
+    - locality-of-reasoning
+    - prefer-existing-patterns
+
+  long-running:
+    - exec-plan
+    - checkpoint-logical-units
+    - progress-and-timeouts
+    - resume-and-cleanup
+
+  agent-work:
+    - verification-and-autonomy
+    - dynamic-workflows
+    - subagent-dispatch
+    - guard-context
+
+  proof-review:
+    - classify-verification-surfaces
+    - validation-hierarchy
+    - review-before-ship
+    - scope-drift-audit
+
+  money-payments:
+    - consistency-vs-availability
+    - atomic-or-serialized-shared-state
+    - trust-boundaries
+    - high-stakes-confusion-protocol
+
+  secrets:
+    - proxy-secrets-and-auth-artifacts
+    - least-privilege-access
+    - structural-safety-boundaries
+
+  deletion-privacy:
+    - right-to-erasure
+    - explicit-data-flow
+    - least-privilege-access
+    - separate-decision-from-effect
+
+  bug-flaky:
+    - fix-root-causes
+    - baseline-before-change
+    - prove-it-works
+
+  dependency-version:
+    - assume-your-knowledge-is-stale
+    - search-before-building
+    - version-the-boundary
+    - prefer-existing-patterns
+
+  external-effects:
+    - separate-decision-from-effect
+    - structural-safety-boundaries
+    - dry-run-before-effects
+    - autonomy-with-stops
+
+  control-loops:
+    - compose-control-loops
+    - deadline-every-wait
+    - make-operations-idempotent
+    - consistency-vs-availability
+
+  failure-degradation:
+    - fail-fast-vs-degrade
+    - degrade-in-tiers
+    - visible-failure-modes
+    - make-it-observable
+
+  docs-knowledge:
+    - locality-of-knowledge
+    - one-source-of-truth
+    - name-unowned-invariants
+    - minimize-reader-load
+
+  generated-artifacts:
+    - one-source-of-truth
+    - stable-paths
+    - make-runs-reproducible
+    - process-is-structure
+
+  repeated-work:
+    - build-the-lever
+    - single-purpose-checks
+    - idempotent-commands
+    - machine-readable-output
+
+  subjective-quality:
+    - grading-subjective-output
+    - quantify-qa-with-baselines
+    - managing-up
+
+  self-improvement:
+    - self-improvement-loop
+    - self-improvement-boundaries
+    - verification-and-autonomy
+    - subtract-before-adding
+
+  repo-module-health:
+    - module-quality-scorecard
+    - make-it-observable
+    - baseline-before-change
+    - locality-of-knowledge

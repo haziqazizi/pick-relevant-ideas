@@ -1,0 +1,272 @@
+# Principle co-application graph for pick-relevant-ideas
+# Authored cold-start graph: co-application, complements, requires, tensions.
+# schema: edges are [a, b, type, weight]
+#   co-applies | tension  → symmetric
+#   complements | requires → directed a → b
+# weight: strong | med  (no authored weak at cold start)
+
+schema_version: 1
+
+semantics:
+  co-applies: symmetric
+  tension: symmetric
+  complements: directed-a-to-b
+  requires: directed-a-to-b
+
+retrieval:
+  max_hops: 2
+  max_binds: 7
+  first_hop_weights: [strong, med]
+  second_hop_weights: [strong]
+  second_hop_require_facet_match: true
+  tension_behavior: flag-only
+  requires_behavior: same-bind-or-select-prerequisite
+  degree_penalty: inverse-sqrt
+  # Clusters are labels/eval fixtures, not hyperedges. Never auto-add a cluster.
+
+edges:
+  # Intent, autonomy, delegation, and improvement
+  - [managing-up, communication, complements, strong]
+  - [managing-up, exhaust-design-space, complements, med]
+  - [communication, high-stakes-confusion-protocol, complements, strong]
+  - [autonomy-with-stops, verification-and-autonomy, requires, strong]
+  - [verification-and-autonomy, classify-verification-surfaces, requires, strong]
+  - [verification-and-autonomy, baseline-before-change, complements, strong]
+  - [verification-and-autonomy, review-before-ship, co-applies, strong]
+  - [verification-and-autonomy, adversarial-hardening, co-applies, med]
+  - [grading-subjective-output, verification-and-autonomy, requires, strong]
+  - [grading-subjective-output, quantify-qa-with-baselines, complements, med]
+  - [dynamic-workflows, subagent-dispatch, complements, strong]
+  - [subagent-dispatch, guard-context, complements, strong]
+  - [subagent-dispatch, exec-plan, co-applies, med]
+  - [exec-plan, checkpoint-logical-units, complements, strong]
+  - [loaded-content-is-data, trust-boundaries, co-applies, strong]
+  - [loaded-content-is-data, subagent-dispatch, complements, med]
+  - [assume-your-knowledge-is-stale, search-before-building, co-applies, strong]
+  - [self-improvement-loop, self-improvement-boundaries, requires, strong]
+  - [self-improvement-boundaries, verification-and-autonomy, requires, strong]
+  - [self-improvement-loop, subtract-before-adding, complements, strong]
+  - [fix-loop-self-regulation, baseline-before-change, requires, strong]
+  - [fix-loop-self-regulation, atomic-steps, complements, strong]
+  - [finish-obligations-before-exit, teardown-what-you-start, complements, strong]
+
+  # Proof, review, and diagnosis
+  - [baseline-before-change, prove-it-works, complements, strong]
+  - [fix-root-causes, baseline-before-change, requires, strong]
+  - [fix-root-causes, prove-it-works, complements, strong]
+  - [prove-it-works, classify-verification-surfaces, complements, strong]
+  - [classify-verification-surfaces, validation-hierarchy, complements, strong]
+  - [user-visible-proof, classify-verification-surfaces, requires, strong]
+  - [user-visible-proof, probe-end-to-end, co-applies, med]
+  - [probe-end-to-end, explicit-data-flow, complements, strong]
+  - [make-runs-reproducible, prove-it-works, complements, strong]
+  - [quantify-qa-with-baselines, baseline-before-change, requires, strong]
+  - [measure-before-optimizing, baseline-before-change, requires, strong]
+  - [measure-before-optimizing, make-it-observable, complements, strong]
+  - [make-it-observable, visible-failure-modes, complements, strong]
+  - [review-before-ship, scope-drift-audit, requires, strong]
+  - [review-before-ship, name-residual-risk, complements, med]
+  - [adversarial-hardening, prove-it-works, complements, strong]
+
+  # Boundaries, permissions, data validity, irreversible duties
+  - [trust-boundaries, boundary-discipline, complements, strong]
+  - [trust-boundaries, data-shape-discipline, complements, strong]
+  - [boundary-discipline, make-illegal-states-unrepresentable, complements, strong]
+  - [data-shape-discipline, make-illegal-states-unrepresentable, complements, strong]
+  - [data-shape-discipline, one-source-of-truth, co-applies, strong]
+  - [least-privilege-access, proxy-secrets-and-auth-artifacts, complements, strong]
+  - [least-privilege-access, tool-safety, co-applies, strong]
+  - [structural-safety-boundaries, separate-decision-from-effect, complements, strong]
+  - [structural-safety-boundaries, dry-run-before-effects, complements, strong]
+  - [tool-safety, explicit-confirmation-bypass, complements, strong]
+  - [high-stakes-confusion-protocol, autonomy-with-stops, requires, strong]
+  - [right-to-erasure, optimize-for-reversibility, tension, strong]
+  - [right-to-erasure, explicit-data-flow, complements, strong]
+  - [make-illegal-states-unrepresentable, simplicity-budget, tension, med]
+  - [boundary-discipline, fail-fast-vs-degrade, complements, med]
+  - [pit-of-success, structural-safety-boundaries, complements, strong]
+
+  # Time, shared state, control loops, degraded behavior
+  - [deadline-every-wait, time-is-an-input, co-applies, strong]
+  - [deadline-every-wait, make-operations-idempotent, complements, med]
+  - [deadline-every-wait, progress-and-timeouts, complements, strong]
+  - [atomic-or-serialized-shared-state, make-operations-idempotent, co-applies, strong]
+  - [atomic-or-serialized-shared-state, one-source-of-truth, complements, med]
+  - [make-operations-idempotent, idempotent-commands, co-applies, strong]
+  - [consistency-vs-availability, make-operations-idempotent, complements, med]
+  - [compose-control-loops, deadline-every-wait, co-applies, strong]
+  - [compose-control-loops, make-it-observable, complements, strong]
+  - [keep-responsive-path-free, deadline-every-wait, co-applies, strong]
+  - [keep-responsive-path-free, bound-caller-created-work, co-applies, strong]
+  - [draw-the-whole-graph, explicit-data-flow, complements, strong]
+  - [draw-the-whole-graph, trace-the-shadow-paths, complements, med]
+  - [trace-the-shadow-paths, fail-fast-vs-degrade, complements, strong]
+  - [fail-fast-vs-degrade, degrade-in-tiers, tension, strong]
+  - [fail-fast-vs-degrade, visible-failure-modes, complements, strong]
+  - [degrade-in-tiers, visible-failure-modes, requires, strong]
+  - [bound-caller-created-work, simplicity-budget, tension, med]
+  - [locality-of-reasoning, one-source-of-truth, tension, strong]
+  - [locality-of-knowledge, one-source-of-truth, tension, strong]
+
+  # Migration, contract evolution, design, maintainability
+  - [systems-over-heroes, make-it-observable, complements, strong]
+  - [systems-over-heroes, resume-and-cleanup, complements, med]
+  - [module-quality-scorecard, make-it-observable, complements, med]
+  - [version-the-boundary, deprecate-with-a-migration-path, co-applies, strong]
+  - [version-the-boundary, incremental-over-revolutionary, complements, strong]
+  - [version-the-boundary, validation-hierarchy, co-applies, med]
+  - [deprecate-with-a-migration-path, incremental-over-revolutionary, requires, strong]
+  - [separate-decision-from-effect, atomic-steps, complements, strong]
+  - [separate-decision-from-effect, dry-run-before-effects, complements, strong]
+  - [atomic-steps, make-operations-idempotent, complements, strong]
+  - [optimize-for-reversibility, incremental-over-revolutionary, co-applies, strong]
+  - [outcome-oriented-execution, sequence-verifiable-units, requires, strong]
+  - [redesign-from-first-principles, outcome-oriented-execution, requires, strong]
+  - [redesign-from-first-principles, incremental-over-revolutionary, complements, strong]
+  - [incremental-over-revolutionary, sequence-verifiable-units, requires, strong]
+  - [sequence-verifiable-units, prove-it-works, complements, strong]
+  - [subtract-before-adding, simplicity-budget, complements, strong]
+  - [simplicity-budget, minimize-reader-load, complements, strong]
+  - [minimize-reader-load, name-to-reveal, co-applies, strong]
+  - [prefer-existing-patterns, boring-by-default, co-applies, strong]
+  - [search-before-building, boring-by-default, co-applies, strong]
+  - [search-before-building, prefer-existing-patterns, complements, med]
+  - [exhaust-design-space, prefer-existing-patterns, tension, med]
+  - [two-week-smell, locality-of-knowledge, complements, strong]
+  - [locality-of-knowledge, name-unowned-invariants, complements, strong]
+  - [name-unowned-invariants, process-is-structure, complements, strong]
+  - [build-the-lever, simplicity-budget, complements, med]
+
+  # Script and CLI surfaces
+  - [agent-friendly-cli, non-interactive-first, requires, strong]
+  - [agent-friendly-cli, actionable-errors, complements, strong]
+  - [agent-friendly-cli, predictable-command-shape, complements, med]
+  - [non-interactive-first, explicit-confirmation-bypass, complements, strong]
+  - [dry-run-before-effects, explicit-confirmation-bypass, complements, strong]
+  - [dry-run-before-effects, idempotent-commands, complements, strong]
+  - [machine-readable-output, pipeline-friendly-io, co-applies, strong]
+  - [machine-readable-output, stable-exit-codes, complements, strong]
+  - [pipeline-friendly-io, stable-exit-codes, co-applies, strong]
+  - [layered-help, copy-paste-examples, complements, strong]
+  - [progress-and-timeouts, resume-and-cleanup, complements, strong]
+  - [resume-and-cleanup, idempotent-commands, co-applies, strong]
+  - [stable-paths, resume-and-cleanup, co-applies, strong]
+  - [stable-paths, make-runs-reproducible, complements, med]
+  - [single-purpose-checks, stable-exit-codes, requires, strong]
+  - [single-purpose-checks, actionable-errors, complements, strong]
+  - [single-purpose-checks, machine-readable-output, co-applies, med]
+  - [actionable-errors, stable-exit-codes, complements, strong]
+
+clusters:
+  boundary-to-valid-domain:
+    members:
+      - trust-boundaries
+      - boundary-discipline
+      - data-shape-discipline
+      - make-illegal-states-unrepresentable
+      - least-privilege-access
+      - visible-failure-modes
+
+  convergent-shared-work:
+    members:
+      - atomic-or-serialized-shared-state
+      - make-operations-idempotent
+      - one-source-of-truth
+      - deadline-every-wait
+      - time-is-an-input
+      - consistency-vs-availability
+      - compose-control-loops
+
+  contract-evolution:
+    members:
+      - version-the-boundary
+      - deprecate-with-a-migration-path
+      - incremental-over-revolutionary
+      - baseline-before-change
+      - optimize-for-reversibility
+      - sequence-verifiable-units
+
+  faithful-proof:
+    members:
+      - baseline-before-change
+      - classify-verification-surfaces
+      - validation-hierarchy
+      - prove-it-works
+      - probe-end-to-end
+      - user-visible-proof
+      - name-residual-risk
+
+  safe-external-effects:
+    members:
+      - separate-decision-from-effect
+      - atomic-steps
+      - structural-safety-boundaries
+      - dry-run-before-effects
+      - explicit-confirmation-bypass
+      - autonomy-with-stops
+      - optimize-for-reversibility
+
+  operable-degradation:
+    members:
+      - fail-fast-vs-degrade
+      - degrade-in-tiers
+      - visible-failure-modes
+      - make-it-observable
+      - systems-over-heroes
+      - deadline-every-wait
+
+  legible-refactor:
+    members:
+      - subtract-before-adding
+      - simplicity-budget
+      - locality-of-reasoning
+      - minimize-reader-load
+      - name-to-reveal
+      - prefer-existing-patterns
+
+  delegated-agent-work:
+    members:
+      - verification-and-autonomy
+      - dynamic-workflows
+      - subagent-dispatch
+      - guard-context
+      - exec-plan
+      - checkpoint-logical-units
+
+  automation-cli:
+    members:
+      - agent-friendly-cli
+      - non-interactive-first
+      - actionable-errors
+      - machine-readable-output
+      - stable-exit-codes
+      - progress-and-timeouts
+      - resume-and-cleanup
+
+  self-improving-loop:
+    members:
+      - self-improvement-loop
+      - self-improvement-boundaries
+      - fix-loop-self-regulation
+      - verification-and-autonomy
+      - baseline-before-change
+      - atomic-steps
+      - subtract-before-adding
+
+must_keep_if_pruning:
+  - [autonomy-with-stops, verification-and-autonomy]
+  - [self-improvement-loop, self-improvement-boundaries]
+  - [baseline-before-change, prove-it-works]
+  - [classify-verification-surfaces, validation-hierarchy]
+  - [trust-boundaries, boundary-discipline]
+  - [data-shape-discipline, make-illegal-states-unrepresentable]
+  - [deadline-every-wait, time-is-an-input]
+  - [atomic-or-serialized-shared-state, make-operations-idempotent]
+  - [make-it-observable, visible-failure-modes]
+  - [version-the-boundary, deprecate-with-a-migration-path]
+  - [separate-decision-from-effect, atomic-steps]
+  - [subtract-before-adding, simplicity-budget]
+  - [dynamic-workflows, subagent-dispatch]
+  - [agent-friendly-cli, non-interactive-first]
+  - [machine-readable-output, pipeline-friendly-io]
+  - [progress-and-timeouts, resume-and-cleanup]
